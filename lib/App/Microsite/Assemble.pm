@@ -1,6 +1,6 @@
 package App::Microsite::Assemble;
 {
-  $App::Microsite::Assemble::VERSION = '0.02';
+  $App::Microsite::Assemble::VERSION = '0.03';
 }
 # ABSTRACT: Assemble a microsite with Handlebars
 use strict;
@@ -125,7 +125,8 @@ sub _handlebars {
     my $path  = shift;
     my $args  = shift;
 
-    Text::Handlebars->new(
+    my $hb;
+    $hb = Text::Handlebars->new(
         # errors are caught and kind of suppressed inside xslate,
         # so make their presence more violently known
         # also, current_template provides more context for where the error
@@ -160,12 +161,12 @@ sub _handlebars {
                             $content = $args->{fragment_filter}->($content, $fragment, $name);
                         }
 
-                        return mark_raw($content);
+                        return mark_raw($hb->render_string($content));
                     }
                 }
 
                 my $content = $args->{missing_fragment}->($name, \@paths);
-                return mark_raw($content);
+                return mark_raw($hb->render_string($content));
             },
         },
         suffix => '.partial',
@@ -217,7 +218,7 @@ App::Microsite::Assemble - Assemble a microsite with Handlebars
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 DESCRIPTION
 
