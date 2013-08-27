@@ -1,7 +1,8 @@
 package App::Microsite::Assemble;
 {
-  $App::Microsite::Assemble::VERSION = '0.01';
+  $App::Microsite::Assemble::VERSION = '0.02';
 }
+# ABSTRACT: Assemble a microsite with Handlebars
 use strict;
 use warnings;
 use File::Next;
@@ -163,7 +164,8 @@ sub _handlebars {
                     }
                 }
 
-                return $args->{missing_fragment}->($name, \@paths);
+                my $content = $args->{missing_fragment}->($name, \@paths);
+                return mark_raw($content);
             },
         },
         suffix => '.partial',
@@ -211,11 +213,11 @@ __END__
 
 =head1 NAME
 
-App::Microsite::Assemble
+App::Microsite::Assemble - Assemble a microsite with Handlebars
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 DESCRIPTION
 
@@ -232,14 +234,6 @@ Similarly, any directory can have a F<config.json> which will combine in the usu
 You can put partials in any directory under F<templates/> and they will cascade; deeper partials will shadow shallower partials.
 
 Finally, the F<fragments/> directory structure should match F<templates/>. The search path for fragment names works just like everything else.
-
-=head1 NAME
-
-App::Microsite::Assemble - Assemble a microsite with Handlebars
-
-=head1 VERSION
-
-version 0.01
 
 =head1 AUTHORS
 
